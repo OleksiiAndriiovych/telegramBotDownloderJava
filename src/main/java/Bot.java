@@ -17,6 +17,9 @@ public class Bot extends TelegramLongPollingBot {
 
     private final Downloader downloader = new Downloader();
     private final static List<String> youTubeDomains = getYouTubeDomains();
+    private final static String NAME_OF_BOT = "MDownlodrMsicRokoko1982Bot";
+    private final static String TOKEN = "1920574647:AAGFzdYf0jcZTD4SOS7AZLdGOF2C-5X5kfs";
+
 
     private static List<String> getYouTubeDomains() {
         List<String> youTubeDomains = new ArrayList<>(3);
@@ -100,11 +103,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "";
+        return NAME_OF_BOT;
     }
 
     @Override
     public String getBotToken() {
-        return "";
+        return TOKEN;
     }
 }
