@@ -29,51 +29,39 @@ public class Downloader {
     }
 
     //for test
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Downloader app = new Downloader();
         app.downloadFile("H-1WEJvasvE");
     }
 
-    public String downloadFile(String youtubeURL) {
-        String nameOfFile = null;
-        JSONObject result = requestToServer(youtubeURL, true);
-        if (result != null) {
-            nameOfFile = result.getString("title");
-            String url = host + result.getString("mp3");
-            try {
-                saveFile(url, nameOfFile);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                try {
-                    saveFile(url, nameOfFile);
-                } catch (IOException e2) {
-                    nameOfFile = null;
-                }
-            }
+    public String downloadFile(String youtubeURL) throws IOException {
+        JSONObject result;
+        try {
+            result = requestToServer(youtubeURL);
+        } catch (IOException e) {
+            setHostOfDownloaderServer();
+            result = requestToServer(youtubeURL);
+        }
+        String nameOfFile = result.getString("title");
+        String url = host + result.getString("mp3");
+        try {
+            saveFile(url, nameOfFile);
+        } catch (IOException e) {
+            saveFile(url, nameOfFile);
         }
         return nameOfFile;
     }
 
-    private JSONObject requestToServer(String youtubeURL, boolean isFirstTime) {
+    private JSONObject requestToServer(String youtubeURL) throws IOException {
         JSONObject result;
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("u", youtubeURL));
         HttpPost post = new HttpPost(host + "/p");
-        try {
-            post.setEntity(new UrlEncodedFormEntity(urlParameters));
-            CloseableHttpResponse response = HTTP_CLIENT.execute(post);
-            HttpEntity httpEntity = response.getEntity();
-            result = new JSONObject(EntityUtils.toString(httpEntity));
-            response.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (isFirstTime) {
-                setHostOfDownloaderServer();
-                result = requestToServer(youtubeURL, false);
-            } else {
-                result = null;
-            }
-        }
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        CloseableHttpResponse response = HTTP_CLIENT.execute(post);
+        HttpEntity httpEntity = response.getEntity();
+        result = new JSONObject(EntityUtils.toString(httpEntity));
+        response.close();
         return result;
     }
 

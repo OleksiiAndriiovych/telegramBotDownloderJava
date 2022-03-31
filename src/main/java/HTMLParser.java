@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class HTMLParser {
 
     private final String URL;
-    private String content = null;
+    private String context = null;
 
     public HTMLParser(String URL) {
         super();
@@ -18,9 +18,9 @@ public class HTMLParser {
             loadContext();
         } catch (IOException e) {
             e.printStackTrace();
-            content = "";
+            context = "";
         }
-        return content;
+        return context;
     }
 
     private void loadContext() throws IOException {
@@ -28,7 +28,7 @@ public class HTMLParser {
         URLConnection connection = website.openConnection();
         Scanner scanner = new Scanner(connection.getInputStream());
         scanner.useDelimiter("\\Z");
-        content = scanner.next();
+        context = scanner.next();
         scanner.close();
     }
 

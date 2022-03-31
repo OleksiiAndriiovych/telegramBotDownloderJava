@@ -45,7 +45,7 @@
                         <manifest>
                             <classpathPrefix>libs/</classpathPrefix>
                             <addClasspath>true</addClasspath>
-                            <mainClass>Bot</mainClass>
+                            <mainClass>BotRunner</mainClass>
                         </manifest>
                     </archive>
 
