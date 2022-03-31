@@ -9,10 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ public class Downloader {
         app.downloadFile("H-1WEJvasvE");
     }
 
-    public String downloadFile(String youtubeURL) throws IOException {
+    public File downloadFile(String youtubeURL) throws IOException {
         JSONObject result;
         try {
             result = requestToServer(youtubeURL);
@@ -42,14 +39,14 @@ public class Downloader {
             setHostOfDownloaderServer();
             result = requestToServer(youtubeURL);
         }
-        String nameOfFile = result.getString("title");
+        File mp3File = new File(result.getString("title"));
         String url = host + result.getString("mp3");
         try {
-            saveFile(url, nameOfFile);
+            saveFile(url, mp3File);
         } catch (IOException e) {
-            saveFile(url, nameOfFile);
+            saveFile(url, mp3File);
         }
-        return nameOfFile;
+        return mp3File;
     }
 
     private JSONObject requestToServer(String youtubeURL) throws IOException {
@@ -65,10 +62,10 @@ public class Downloader {
         return result;
     }
 
-    public static void saveFile(String url, String nameOfFile) throws IOException {
+    public static void saveFile(String url, File mp3File) throws IOException {
         URLConnection conn = new URL(url).openConnection();
         InputStream is = conn.getInputStream();
-        OutputStream outstream = new FileOutputStream(nameOfFile);
+        OutputStream outstream = new FileOutputStream(mp3File);
         byte[] buffer = new byte[4096];
         int len;
         while ((len = is.read(buffer)) > 0) {

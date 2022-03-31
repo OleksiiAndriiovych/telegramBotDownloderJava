@@ -34,18 +34,17 @@ public class Handler {
             return;
         }
         sender.sendText(update, "working");
-        String nameOfFile;
+        File mp3File;
         try {
-            nameOfFile = downloader.downloadFile(url);
+            mp3File = downloader.downloadFile(url);
         } catch (IOException e) {
             e.printStackTrace();
             sender.sendText(update, "smth wrong. i'm so sorry");
             return;
         }
         sender.sendText(update, "uploading...");
-        File file = new File(nameOfFile);
-        sender.sendAudio(update, file);
-        file.deleteOnExit();
+        sender.sendAudio(update, mp3File);
+        mp3File.deleteOnExit();
         sender.sendText(update, "this is your");
     }
 }
